@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin OTP Verification</title>
+</head>
+
+<body style="
+  margin:0;
+  padding:24px;
+  background:#f3f5f9;
+  font-family:Arial, Helvetica, sans-serif;
+">
+
+  <center style="width:100%; max-width:600px; margin:0 auto;">
+
+    <!-- HEADER -->
+    <div style="padding:12px 0 22px 0; text-align:center;">
+      <h2 style="
+        margin:0;
+        font-size:20px;
+        color:#1f2937;
+        font-weight:700;
+        letter-spacing:0.4px;
+      ">
+        ST. VINCENT PALLOTTI COLLEGE OF ENGINEERING & TECHNOLOGY, NAGPUR
+      </h2>
+
+      <p style="
+        margin:6px 0 0 0;
+        color:#2563eb;
+        font-size:13px;
+        font-weight:600;
+        letter-spacing:0.3px;
+      ">
+        ADMIN PORTAL • AUTONOMOUS INSTITUTION
+      </p>
+    </div>
+
+    <!-- CARD -->
+    <table
+      role="presentation"
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      style="
+        background:#ffffff;
+        border-radius:10px;
+        padding:30px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.06);
+      "
+    >
+      <tr>
+        <td style="color:#374151;">
+
+          <p style="font-size:15px; margin:0 0 14px 0;">
+            Dear Administrator,
+          </p>
+
+          <p style="font-size:15px; margin:0 0 18px 0; line-height:1.6;">
+            We received a request to for OTP.
+            <strong>Admin Portal</strong> account.
+          </p>
+
+          <p style="font-size:15px; margin:0 0 10px 0;">
+            Please use the One-Time Password (OTP) below to continue:
+          </p>
+
+          <!-- OTP BOX -->
+          <div style="text-align:center; margin:26px 0;">
+            <span style="
+              display:inline-block;
+              background:#eff6ff;
+              padding:16px 28px;
+              font-size:34px;
+              font-weight:700;
+              color:#1e3a8a;
+              letter-spacing:6px;
+              border-radius:8px;
+            ">
+              {{otp}}
+            </span>
+          </div>
+
+          <p style="font-size:14px; margin:0 0 10px 0; color:#6b7280;">
+            This OTP is valid for <strong>5 minutes</strong>.
+          </p>
+
+          <p style="font-size:14px; margin:0 0 16px 0; color:#6b7280; line-height:1.6;">
+            If you did not request a password reset, you can safely ignore
+            this email. Your account will remain secure.
+          </p>
+
+          <p style="font-size:14px; color:#374151;">
+            Regards,<br />
+            <strong>Admin Portal Team</strong>
+          </p>
+
+        </td>
+      </tr>
+    </table>
+
+    <!-- FOOTER -->
+    <p style="
+      margin:22px 0 0 0;
+      font-size:12px;
+      color:#9aa3b2;
+      text-align:center;
+      line-height:1.6;
+    ">
+      © {{year}} St. Vincent Pallotti College of Engineering & Technology, Nagpur<br />
+      This is an automated security message. Please do not reply.
+    </p>
+
+  </center>
+</body>
+</html>
