@@ -637,6 +637,67 @@ def get_single_student(admin, uid):
 
 
 
+@app.route("/api/admin/student/<uid>/delete", methods=["DELETE", "OPTIONS"])
+@admin_token_required
+def delete_student(admin, uid):
+    if request.method == "OPTIONS":
+        return jsonify({"success": True}), 200
+
+    conn = None
+    cur = None
+    try:
+        conn = get_db()
+        conn.begin()
+        cur = conn.cursor()
+
+        # 1. Delete daily quiz answers & attempts for Y2
+        cur.execute("""
+            DELETE FROM daily_quiz_answers_y2 
+            WHERE attempt_id IN (SELECT id FROM daily_quiz_attempts_y2 WHERE uid = %s)
+        """, (uid,))
+        cur.execute("DELETE FROM daily_quiz_attempts_y2 WHERE uid = %s", (uid,))
+
+        # 2. Delete daily quiz answers & attempts for Y3
+        cur.execute("""
+            DELETE FROM daily_quiz_answers_y3 
+            WHERE attempt_id IN (SELECT id FROM daily_quiz_attempts_y3 WHERE uid = %s)
+        """, (uid,))
+        cur.execute("DELETE FROM daily_quiz_attempts_y3 WHERE uid = %s", (uid,))
+
+        # 3. Delete assignment quiz marks for Y2 & Y3
+        cur.execute("DELETE FROM assignment_quiz_marks_y2 WHERE uid = %s", (uid,))
+        cur.execute("DELETE FROM assignment_quiz_marks_y3 WHERE uid = %s", (uid,))
+
+        # 4. Delete from branchquiz
+        cur.execute("DELETE FROM branchquiz WHERE uid_number = %s", (uid,))
+
+        # 5. Delete from quiz_results
+        cur.execute("DELETE FROM quiz_results WHERE uid_number = %s", (uid,))
+
+        # 6. Delete the student record
+        cur.execute("DELETE FROM students WHERE uid = %s", (uid,))
+
+        conn.commit()
+        return jsonify({
+            "success": True,
+            "message": "Student and all associated records deleted successfully"
+        }), 200
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        }), 500
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+
+
 @app.route("/api/admin/daily-quiz/topic", methods=["POST", "OPTIONS"])
 @admin_token_required
 def insert_daily_quiz_topic(admin):
