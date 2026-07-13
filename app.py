@@ -1844,6 +1844,11 @@ def admin_daily_quiz_leaderboard(current_user):
         if year == "2"
         else "daily_quiz_attempts_y3"
     )
+    marks_table = (
+        "assignment_quiz_marks_y2"
+        if year == "2"
+        else "assignment_quiz_marks_y3"
+    )
 
     date_filter = ""
     params = [year]
@@ -1851,7 +1856,7 @@ def admin_daily_quiz_leaderboard(current_user):
     if lb_type == "month":
         if not month:
             return jsonify({"success": False, "message": "Month required"}), 400
-        date_filter = "AND MONTH(a.quiz_date) = %s"
+        date_filter = "AND MONTH(combined.quiz_date) = %s"
         params.append(month)
 
     conn = get_db()
@@ -1861,10 +1866,14 @@ def admin_daily_quiz_leaderboard(current_user):
         SELECT
             s.uid,
             s.name,
-            SUM(a.score) AS total_marks,
-            SUM(a.total) AS total_out_of
-        FROM {attempts_table} a
-        JOIN students s ON s.uid = a.uid
+            SUM(combined.score) AS total_marks,
+            SUM(combined.total) AS total_out_of
+        FROM (
+            SELECT uid, score, total, quiz_date FROM {attempts_table}
+            UNION ALL
+            SELECT uid, score, total_questions AS total, quiz_date FROM {marks_table}
+        ) combined
+        JOIN students s ON s.uid = combined.uid
         WHERE s.year = %s
         {date_filter}
         GROUP BY s.uid, s.name
